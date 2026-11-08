@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Infuse Drive TV</title>
+<style>body{font:18px -apple-system,system-ui,sans-serif;background:#090c12;color:#f8f8fa;display:grid;place-items:center;min-height:100vh;margin:0;text-align:center;padding:24px}a{color:#ff8968}</style>
+</head><body><div id="m">Collegamento con l'Apple TV…</div>
+<script>
+// OAuth redirect relay: forwards Google's ?code&state to the Apple TV on the local network.
+// state = base64url(JSON {h: "<tv host>", n: "<nonce>"}). Only private/.local hosts are allowed.
+(function () {
+  var q = new URLSearchParams(location.search), m = document.getElementById("m");
+  try {
+    var s = q.get("state") || "";
+    var st = JSON.parse(atob(s.replace(/-/g, "+").replace(/_/g, "/")));
+    var h = String(st.h || "");
+    var ok = /^(10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+|[A-Za-z0-9-]+\.local)$/.test(h);
+    if (!ok) throw new Error("host non valido");
+    var p = new URLSearchParams();
+    ["code", "error", "state"].forEach(function (k) { if (q.get(k)) p.set(k, q.get(k)); });
+    location.replace("http://" + h + ":8765/callback?" + p.toString());
+  } catch (e) {
+    m.textContent = "Richiesta non valida: " + e.message;
+  }
+})();
+</script></body></html>
