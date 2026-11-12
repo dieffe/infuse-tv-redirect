@@ -12,7 +12,7 @@
     var s = q.get("state") || "";
     var st = JSON.parse(atob(s.replace(/-/g, "+").replace(/_/g, "/")));
     var h = String(st.h || "");
-    var ok = /^(10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+|[A-Za-z0-9-]+\.local)$/.test(h);
+    var ok = /^(127\.0\.0\.1|10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+|[A-Za-z0-9-]+\.local)$/.test(h);
     if (!ok) throw new Error("host non valido");
     var p = new URLSearchParams();
     ["code", "error", "state"].forEach(function (k) { if (q.get(k)) p.set(k, q.get(k)); });
